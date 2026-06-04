@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getOrderByNumberApi, orderBurgerApi, TOrderResponse } from '@api';
+export type TOrderResponse = {
+  orders: TOrder[];
+};
 import { TOrder } from '@utils-types';
 import { RootState } from '../store';
+import { getOrderByNumberApi, orderBurgerApi } from '@api';
 
 type TOrderState = {
   order: TOrder | null;
@@ -83,13 +86,15 @@ const orderSlice = createSlice({
 });
 
 export const orderActions = orderSlice.actions;
-export const orderSelector = (state: RootState) => state.orderSlice.order;
+export const orderSelector = (state: RootState) => state.order.order;
+
 export const orderRequestSelector = (state: RootState) =>
-  state.orderSlice.orderRequest;
+  state.order.orderRequest;
+
 export const orderModalDataSelector = (state: RootState) =>
-  state.orderSlice.orderModalData;
-export const isLoadingSelector = (state: RootState) =>
-  state.orderSlice.isLoading;
-export const errorSelector = (state: RootState) => state.orderSlice.error;
-// reducer:
+  state.order.orderModalData;
+
+export const isLoadingSelector = (state: RootState) => state.order.isLoading;
+
+export const errorSelector = (state: RootState) => state.order.error;
 export default orderSlice.reducer;

@@ -56,7 +56,6 @@ const App = () => {
           <Route path='/profile/orders/:number' element={<OrderInfo />} />
         </Route>
       </Routes>
-
       {background && (
         <Routes>
           <Route

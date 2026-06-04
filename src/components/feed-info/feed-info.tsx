@@ -10,7 +10,7 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
     .slice(0, 20);
 
 export const FeedInfo: FC = () => {
-  const feed = useSelector((state) => state.feedsSlice);
+  const feed = useSelector((state) => state.feeds);
   const orders: TOrder[] = feed.orders;
 
   const readyOrders = getOrders(orders, 'done');

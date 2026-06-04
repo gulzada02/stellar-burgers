@@ -44,9 +44,12 @@ const ingredientsSlice = createSlice({
   }
 });
 
-export const ingredientsSelector = (state: RootState) =>
-  state.ingredientsSlice.ingredients;
-export const isLoadingSelector = (state: RootState) =>
-  state.ingredientsSlice.isLoading;
-export const errorSelector = (state: RootState) => state.ingredientsSlice.error;
+export const ingredientsSelector = (state: RootState): TIngredient[] =>
+  state.ingredients.ingredients;
+
+export const isLoadingSelector = (state: RootState): boolean =>
+  state.ingredients.isLoading;
+
+export const errorSelector = (state: RootState): string | null =>
+  state.ingredients.error;
 export default ingredientsSlice.reducer;
