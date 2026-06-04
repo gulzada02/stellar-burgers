@@ -66,5 +66,5 @@ const constructorSlice = createSlice({
 });
 
 export const constructorActions = constructorSlice.actions;
-export const constructorSelector = (state: RootState) => state.constructorSlice;
+export const constructorSelector = (state: RootState) => state.constructor;
 export default constructorSlice.reducer;

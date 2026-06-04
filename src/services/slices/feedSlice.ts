@@ -19,11 +19,7 @@ const initialState: TFeedsState = {
   error: null
 };
 
-// ------------------------------------------------------------
-
 export const getFeeds = createAsyncThunk('feeds/get', getFeedsApi);
-
-// ------------------------------------------------------------
 
 const feedsSlice = createSlice({
   name: 'feeds',
@@ -51,14 +47,13 @@ const feedsSlice = createSlice({
   }
 });
 
-// selectors:
-export const ordersFeedsSelector = (state: RootState) =>
-  state.feedsSlice.orders;
-export const totalSelector = (state: RootState) => state.feedsSlice.total;
-export const totalTodaySelector = (state: RootState) =>
-  state.feedsSlice.totalToday;
-export const isLoadingSelector = (state: RootState) =>
-  state.feedsSlice.isLoading;
-export const errorSelector = (state: RootState) => state.feedsSlice.error;
-// reducer:
+export const ordersFeedsSelector = (state: RootState) => state.feeds.orders;
+
+export const totalSelector = (state: RootState) => state.feeds.total;
+
+export const totalTodaySelector = (state: RootState) => state.feeds.totalToday;
+
+export const isLoadingSelector = (state: RootState) => state.feeds.isLoading;
+
+export const errorSelector = (state: RootState) => state.feeds.error;
 export default feedsSlice.reducer;

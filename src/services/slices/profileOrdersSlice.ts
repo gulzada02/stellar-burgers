@@ -45,10 +45,12 @@ const profileOrdersSlice = createSlice({
 });
 
 export const profileOrdersSelector = (state: RootState) =>
-  state.profileOrdersSlice.orders;
+  state.profileOrders.orders;
+
 export const isProfileOrdersLoadingSelector = (state: RootState) =>
-  state.profileOrdersSlice.isLoading;
+  state.profileOrders.isLoading;
+
 export const profileOrdersErrorSelector = (state: RootState) =>
-  state.profileOrdersSlice.error;
+  state.profileOrders.error;
 
 export default profileOrdersSlice.reducer;

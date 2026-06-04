@@ -183,10 +183,12 @@ const authSlice = createSlice({
 });
 
 export const { setAuthChecked, clearError } = authSlice.actions;
-export const getUserSelector = (state: RootState) => state.authSlice.user;
+export const getUserSelector = (state: RootState) => state.auth.user;
+
 export const isAuthCheckedSelector = (state: RootState) =>
-  state.authSlice.isAuthChecked;
-export const isLoadingAuthSelector = (state: RootState) =>
-  state.authSlice.isLoading;
-export const errorAuthSelector = (state: RootState) => state.authSlice.error;
+  state.auth.isAuthChecked;
+
+export const isLoadingAuthSelector = (state: RootState) => state.auth.isLoading;
+
+export const errorAuthSelector = (state: RootState) => state.auth.error;
 export default authSlice.reducer;

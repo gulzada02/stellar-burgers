@@ -21,7 +21,5 @@ export const IngredientDetails: FC = () => {
     return <Preloader />;
   }
 
-  return (
-    <IngredientDetailsUI ingredientData={ingredientData} isModal={isModal} />
-  );
+  return <IngredientDetailsUI ingredientData={ingredientData} />;
 };
