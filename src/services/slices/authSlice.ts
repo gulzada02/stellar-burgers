@@ -65,12 +65,11 @@ export const checkAuth = createAsyncThunk(
     if (accessToken && refreshToken) {
       try {
         await dispatch(getUser()).unwrap();
-      } catch (error) {
+      } catch {
         deleteCookie('accessToken');
         localStorage.removeItem('refreshToken');
       }
     }
-    return null;
   }
 );
 
