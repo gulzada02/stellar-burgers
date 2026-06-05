@@ -14,7 +14,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
 
     const handleAdd = useCallback(() => {
       dispatch(addItem(ingredient));
-    }, [ingredient, dispatch]);
+    }, [dispatch, addItem, ingredient]);
 
     return (
       <BurgerIngredientUI

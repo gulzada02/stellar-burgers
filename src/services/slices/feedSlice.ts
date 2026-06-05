@@ -47,8 +47,7 @@ const feedsSlice = createSlice({
   }
 });
 
-export const ordersFeedsSelector = (state: RootState) => state.feeds.orders;
-
+export const feedsSelector = (state: RootState) => state.feeds.orders;
 export const totalSelector = (state: RootState) => state.feeds.total;
 
 export const totalTodaySelector = (state: RootState) => state.feeds.totalToday;

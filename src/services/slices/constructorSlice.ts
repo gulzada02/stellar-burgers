@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TConstructorIngredient, TIngredient } from '../../utils/types';
 import { RootState } from '../store';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -26,20 +26,22 @@ const constructorSlice = createSlice({
         }
       },
       prepare: (ingredient: TIngredient) => ({
-        payload: { ...ingredient, id: uuidv4() } as TConstructorIngredient
+        payload: {
+          ...ingredient,
+          id: uuidv4()
+        }
       })
     },
+
     deleteItem: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
-        (f) => f.id !== action.payload
+        (item: { id: string }) => item.id !== action.payload
       );
     },
+
     moveItem: (
       state,
-      action: PayloadAction<{
-        index: number;
-        placeToMove: 'up' | 'down';
-      }>
+      action: PayloadAction<{ index: number; placeToMove: 'up' | 'down' }>
     ) => {
       const { index, placeToMove } = action.payload;
 
@@ -48,23 +50,26 @@ const constructorSlice = createSlice({
           state.ingredients[index - 1],
           state.ingredients[index]
         ];
-      } else if (
-        placeToMove === 'down' &&
-        index < state.ingredients.length - 1
-      ) {
+      }
+
+      if (placeToMove === 'down' && index < state.ingredients.length - 1) {
         [state.ingredients[index], state.ingredients[index + 1]] = [
           state.ingredients[index + 1],
           state.ingredients[index]
         ];
       }
     },
+
     clearConstructor: (state) => {
-      (state.bun = initialState.bun),
-        (state.ingredients = initialState.ingredients);
+      state.bun = null;
+      state.ingredients = [];
     }
   }
 });
 
 export const constructorActions = constructorSlice.actions;
 export const constructorSelector = (state: RootState) => state.constructor;
+export const constructorBunSelector = (state: RootState) =>
+  state.constructor.bun;
+
 export default constructorSlice.reducer;

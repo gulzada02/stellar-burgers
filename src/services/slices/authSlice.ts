@@ -184,7 +184,6 @@ const authSlice = createSlice({
 
 export const { setAuthChecked, clearError } = authSlice.actions;
 export const getUserSelector = (state: RootState) => state.auth.user;
-
 export const isAuthCheckedSelector = (state: RootState) =>
   state.auth.isAuthChecked;
 

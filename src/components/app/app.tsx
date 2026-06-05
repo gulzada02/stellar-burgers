@@ -8,14 +8,14 @@ import {
   ProfileOrders,
   Register,
   ResetPassword
-} from '@pages';
+} from '../../pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '../index';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { useEffect } from 'react';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
 import { checkAuth } from '../../services/slices/authSlice';
 

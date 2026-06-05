@@ -15,10 +15,17 @@ const initialState: TIngredientsState = {
   error: null
 };
 
-export const getIngredients = createAsyncThunk(
-  'ingredients/get',
-  getIngredientsApi
-);
+export const getIngredients = createAsyncThunk<
+  TIngredient[],
+  void,
+  { rejectValue: string }
+>('ingredients/get', async (_, { rejectWithValue }) => {
+  try {
+    return await getIngredientsApi();
+  } catch (err) {
+    return rejectWithValue('Ошибка загрузки ингредиентов');
+  }
+});
 
 const ingredientsSlice = createSlice({
   name: 'ingredients',
@@ -44,10 +51,10 @@ const ingredientsSlice = createSlice({
   }
 });
 
-export const ingredientsSelector = (state: RootState): TIngredient[] =>
+export const ingredientsSelector = (state: RootState) =>
   state.ingredients.ingredients;
 
-export const isLoadingSelector = (state: RootState): boolean =>
+export const isLoadingSelector = (state: RootState) =>
   state.ingredients.isLoading;
 
 export const errorSelector = (state: RootState): string | null =>

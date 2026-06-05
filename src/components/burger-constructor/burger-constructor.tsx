@@ -61,15 +61,14 @@ export const BurgerConstructor: FC = () => {
     navigate('/feed');
   };
 
-  const price = useMemo(
-    () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
-        (s: number, v: TConstructorIngredient) => s + v.price,
-        0
-      ),
-    [constructorItems]
-  );
+  const price = useMemo(() => {
+    const ingredients = constructorItems?.ingredients ?? [];
+
+    return (
+      (constructorItems?.bun ? constructorItems.bun.price * 2 : 0) +
+      ingredients.reduce((s, v) => s + v.price, 0)
+    );
+  }, [constructorItems]);
 
   return (
     <BurgerConstructorUI
