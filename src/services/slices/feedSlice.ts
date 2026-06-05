@@ -11,7 +11,7 @@ type TFeedsState = {
   error: string | null;
 };
 
-const initialState: TFeedsState = {
+export const initialState: TFeedsState = {
   orders: [],
   total: 0,
   totalToday: 0,
@@ -19,7 +19,17 @@ const initialState: TFeedsState = {
   error: null
 };
 
-export const getFeeds = createAsyncThunk('feeds/get', getFeedsApi);
+export const getFeeds = createAsyncThunk<
+  TFeedsResponse,
+  void,
+  { rejectValue: string }
+>('feeds/get', async (_, thunkApi) => {
+  try {
+    return await getFeedsApi();
+  } catch (e) {
+    return thunkApi.rejectWithValue('Ошибка загрузки ленты');
+  }
+});
 
 const feedsSlice = createSlice({
   name: 'feeds',
@@ -34,25 +44,23 @@ const feedsSlice = createSlice({
       .addCase(
         getFeeds.fulfilled,
         (state, action: PayloadAction<TFeedsResponse>) => {
-          state.isLoading = false;
           state.orders = action.payload.orders;
           state.total = action.payload.total;
           state.totalToday = action.payload.totalToday;
+          state.isLoading = false;
+          state.error = null;
         }
       )
       .addCase(getFeeds.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки ленты заказов';
+        state.error = action.payload || 'Ошибка загрузки ленты';
       });
   }
 });
 
-export const feedsSelector = (state: RootState) => state.feeds.orders;
+export const ordersFeedsSelector = (state: RootState) => state.feeds.orders;
 export const totalSelector = (state: RootState) => state.feeds.total;
-
 export const totalTodaySelector = (state: RootState) => state.feeds.totalToday;
-
 export const isLoadingSelector = (state: RootState) => state.feeds.isLoading;
-
 export const errorSelector = (state: RootState) => state.feeds.error;
 export default feedsSlice.reducer;
