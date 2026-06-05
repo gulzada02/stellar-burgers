@@ -16,23 +16,18 @@ export const ProtectedRoute = ({
   const isAuthChecked = useSelector(isAuthCheckedSelector);
   const user = useSelector(getUserSelector);
   const location = useLocation();
-  const isModal = location.state?.modal;
 
-  if (!isAuthChecked && !isModal) {
+  if (!isAuthChecked) {
     return <Preloader />;
-  }
-
-  if (!isAuthChecked && isModal) {
-    return null;
-  }
-
-  if (onlyUnAuth && user) {
-    const from = location.state?.from || { pathname: '/' };
-    return <Navigate to={from} replace />;
   }
 
   if (!onlyUnAuth && !user) {
     return <Navigate to='/login' state={{ from: location }} replace />;
+  }
+
+  if (onlyUnAuth && user) {
+    const from = location.state?.from?.pathname || '/';
+    return <Navigate to={from} replace />;
   }
 
   return <Outlet />;

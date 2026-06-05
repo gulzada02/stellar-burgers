@@ -143,6 +143,7 @@ const authSlice = createSlice({
         (state, action: PayloadAction<TAuthResponse>) => {
           state.isLoading = false;
           state.user = action.payload.user;
+          state.isAuthChecked = true;
         }
       )
       .addCase(register.rejected, (state, action) => {
@@ -159,6 +160,7 @@ const authSlice = createSlice({
         (state, action: PayloadAction<TAuthResponse>) => {
           state.isLoading = false;
           state.user = action.payload.user;
+          state.isAuthChecked = true;
         }
       )
       .addCase(login.rejected, (state, action) => {
@@ -173,6 +175,7 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
+        state.isAuthChecked = true;
       })
       .addCase(logout.rejected, (state, action) => {
         state.isLoading = false;

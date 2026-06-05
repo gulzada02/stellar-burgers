@@ -17,19 +17,27 @@ const constructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
-    addItem: (state, action: PayloadAction<TConstructorIngredient>) => {
-      if (!action.payload) return;
+    addItem: (state, action: PayloadAction<TIngredient>) => {
+      const item = action.payload;
 
-      if (action.payload.type === 'bun') {
-        state.bun = action.payload;
+      if (!item) return;
+
+      if (item.type === 'bun') {
+        state.bun = {
+          ...item,
+          id: uuidv4()
+        } as TConstructorIngredient;
       } else {
-        state.ingredients.push(action.payload);
+        state.ingredients.push({
+          ...item,
+          id: uuidv4()
+        });
       }
     },
 
     deleteItem: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
-        (item: { id: string }) => item.id !== action.payload
+        (item) => item.id !== action.payload
       );
     },
 
@@ -40,17 +48,15 @@ const constructorSlice = createSlice({
       const { index, placeToMove } = action.payload;
 
       if (placeToMove === 'up' && index > 0) {
-        [state.ingredients[index], state.ingredients[index - 1]] = [
-          state.ingredients[index - 1],
-          state.ingredients[index]
-        ];
+        const temp = state.ingredients[index - 1];
+        state.ingredients[index - 1] = state.ingredients[index];
+        state.ingredients[index] = temp;
       }
 
       if (placeToMove === 'down' && index < state.ingredients.length - 1) {
-        [state.ingredients[index], state.ingredients[index + 1]] = [
-          state.ingredients[index + 1],
-          state.ingredients[index]
-        ];
+        const temp = state.ingredients[index + 1];
+        state.ingredients[index + 1] = state.ingredients[index];
+        state.ingredients[index] = temp;
       }
     },
 
@@ -62,8 +68,13 @@ const constructorSlice = createSlice({
 });
 
 export const constructorActions = constructorSlice.actions;
+
 export const constructorSelector = (state: RootState) => state.constructorSlice;
+
 export const constructorBunSelector = (state: RootState) =>
   state.constructorSlice.bun;
+
+export const constructorIngredientsSelector = (state: RootState) =>
+  state.constructorSlice.ingredients;
 
 export default constructorSlice.reducer;

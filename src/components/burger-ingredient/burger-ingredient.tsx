@@ -16,7 +16,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
       dispatch(
         addItem({
           ...ingredient,
-          id: ingredient._id
+          _id: ingredient._id
         })
       );
     }, [dispatch, addItem, ingredient]);
