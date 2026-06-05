@@ -13,7 +13,12 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     const { addItem } = constructorActions;
 
     const handleAdd = useCallback(() => {
-      dispatch(addItem(ingredient));
+      dispatch(
+        addItem({
+          ...ingredient,
+          id: ingredient._id
+        })
+      );
     }, [dispatch, addItem, ingredient]);
 
     return (
