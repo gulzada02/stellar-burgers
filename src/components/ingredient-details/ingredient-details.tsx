@@ -15,7 +15,9 @@ export const IngredientDetails: FC = () => {
 
   const ingredients = useSelector(ingredientsSelector);
   const isIngredientsLoading = useSelector(isLoadingSelector);
-  const ingredientData = ingredients.find((ing) => ing._id === id);
+  const ingredientData = ingredients.find(
+    (ing: { _id: string | undefined }) => ing._id === id
+  );
 
   if (isIngredientsLoading || !ingredientData) {
     return <Preloader />;

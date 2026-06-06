@@ -23,11 +23,11 @@ export const getFeeds = createAsyncThunk<
   TFeedsResponse,
   void,
   { rejectValue: string }
->('feeds/get', async (_, thunkApi) => {
+>('feeds/getFeeds', async (_, thunkApi) => {
   try {
     return await getFeedsApi();
-  } catch (e) {
-    return thunkApi.rejectWithValue('Ошибка загрузки ленты');
+  } catch (err) {
+    return thunkApi.rejectWithValue('Ошибка загрузки ленты заказов');
   }
 });
 
@@ -44,11 +44,10 @@ const feedsSlice = createSlice({
       .addCase(
         getFeeds.fulfilled,
         (state, action: PayloadAction<TFeedsResponse>) => {
+          state.isLoading = false;
           state.orders = action.payload.orders;
           state.total = action.payload.total;
           state.totalToday = action.payload.totalToday;
-          state.isLoading = false;
-          state.error = null;
         }
       )
       .addCase(getFeeds.rejected, (state, action) => {

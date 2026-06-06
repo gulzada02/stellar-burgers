@@ -10,16 +10,11 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
     const location = useLocation();
     const dispatch = useDispatch();
-    const { addItem } = constructorActions;
+    const { addIngredient } = constructorActions;
 
     const handleAdd = useCallback(() => {
-      dispatch(
-        addItem({
-          ...ingredient,
-          _id: ingredient._id
-        })
-      );
-    }, [dispatch, addItem, ingredient]);
+      dispatch(addIngredient(ingredient));
+    }, [dispatch, ingredient]);
 
     return (
       <BurgerIngredientUI

@@ -4,75 +4,88 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
-
 import {
   getOrderByNumber,
   orderSelector,
   isLoadingSelector
 } from '../../services/slices/orderSlice';
-
+import { ordersFeedsSelector } from '../../services/slices/feedSlice';
+import { profileOrdersSelector } from '../../services/slices/profileOrdersSlice';
 import { ingredientsSelector } from '../../services/slices/ingredientsSlice';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
   const location = useLocation();
   const dispatch = useDispatch();
+  const isModal = !!location.state?.background;
 
-  const isModal = Boolean(location.state?.background);
-
-  const order = useSelector(orderSelector);
-  const isLoading = useSelector(isLoadingSelector);
+  const ordersFromFeed = useSelector(ordersFeedsSelector);
+  const ordersFromProfile = useSelector(profileOrdersSelector);
+  const orderFromAPI = useSelector(orderSelector);
+  const isOrderLoading = useSelector(isLoadingSelector);
   const ingredients = useSelector(ingredientsSelector);
 
-  useEffect(() => {
-    if (number) {
-      dispatch(getOrderByNumber(Number(number)));
-    }
-  }, [dispatch, number]);
+  const orderData = isModal
+    ? ordersFromFeed.find(
+        (order: { number: { toString: () => string | undefined } }) =>
+          order.number.toString() === number
+      ) ||
+      ordersFromProfile.find(
+        (order: { number: { toString: () => string | undefined } }) =>
+          order.number.toString() === number
+      )
+    : orderFromAPI;
 
   const orderInfo = useMemo(() => {
-    if (!order || !ingredients.length) return null;
+    if (!orderData || !ingredients.length) return null;
 
-    const date = new Date(order.createdAt);
+    const date = new Date(orderData.createdAt);
 
-    type TIngredientsWithCount = Record<
-      string,
-      TIngredient & { count: number }
-    >;
+    type TIngredientsWithCount = {
+      [key: string]: TIngredient & { count: number };
+    };
 
-    const ingredientsInfo = order.ingredients.reduce(
-      (acc: TIngredientsWithCount, id: string) => {
-        const ingredient = ingredients.find((i) => i._id === id);
-        if (!ingredient) return acc;
-
-        if (!acc[id]) {
-          acc[id] = {
-            ...ingredient,
-            count: 1
-          };
+    const ingredientsInfo = orderData.ingredients.reduce(
+      (acc: TIngredientsWithCount, item: string | number) => {
+        if (!acc[item]) {
+          const ingredient = ingredients.find(
+            (ing: { _id: string | number }) => ing._id === item
+          );
+          if (ingredient) {
+            acc[item] = {
+              ...ingredient,
+              count: 1
+            };
+          }
         } else {
-          acc[id].count += 1;
+          acc[item].count++;
         }
 
         return acc;
       },
-      {}
+      {} as TIngredientsWithCount
     );
 
-    const total = Object.values(ingredientsInfo).reduce(
-      (sum, item) => sum + item.price * item.count,
-      0
-    );
+    const total = (
+      Object.values(ingredientsInfo) as (TIngredient & { count: number })[]
+    ).reduce((acc, item) => acc + item.price * item.count, 0);
 
     return {
-      ...order,
+      ...orderData,
       ingredientsInfo,
       date,
       total
     };
-  }, [order, ingredients]);
+  }, [orderData, ingredients]);
 
-  if (isLoading || !orderInfo) {
+  useEffect(() => {
+    if (number && !isModal) {
+      const orderNumber = Number(number);
+      dispatch(getOrderByNumber(orderNumber));
+    }
+  }, [dispatch, number, isModal]);
+
+  if (isOrderLoading || !orderInfo) {
     return <Preloader />;
   }
 

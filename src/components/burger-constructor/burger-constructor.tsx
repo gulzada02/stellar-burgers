@@ -66,7 +66,7 @@ export const BurgerConstructor: FC = () => {
 
     return (
       (constructorItems?.bun ? constructorItems.bun.price * 2 : 0) +
-      ingredients.reduce((s, v) => s + v.price, 0)
+      ingredients.reduce((s: any, v: { price: any }) => s + v.price, 0)
     );
   }, [constructorItems]);
 

@@ -8,14 +8,20 @@ import {
   ProfileOrders,
   Register,
   ResetPassword
-} from '../../pages';
+} from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { AppHeader, IngredientDetails, Modal, OrderInfo } from '../index';
+import {
+  AppHeader,
+  IngredientDetails,
+  Modal,
+  OrderInfo,
+  OrdersList
+} from '@components';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
+import { useDispatch } from '../../services/store';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
 import { checkAuth } from '../../services/slices/authSlice';
 
@@ -30,7 +36,7 @@ const App = () => {
   useEffect(() => {
     dispatch(checkAuth());
     dispatch(getIngredients());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
@@ -39,6 +45,7 @@ const App = () => {
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='*' element={<NotFound404 />} />
@@ -56,6 +63,7 @@ const App = () => {
           <Route path='/profile/orders/:number' element={<OrderInfo />} />
         </Route>
       </Routes>
+
       {background && (
         <Routes>
           <Route
