@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { getOrderByNumberApi, orderBurgerApi, TNewOrderResponse } from '@api';
 export type TOrderResponse = {
   orders: TOrder[];
 };
 import { TOrder } from '@utils-types';
 import { RootState } from '../store';
-import { getOrderByNumberApi, orderBurgerApi } from '@api';
 
 type TOrderState = {
   order: TOrder | null;
@@ -27,10 +27,17 @@ export const getOrderByNumber = createAsyncThunk(
   async (orderNumber: number) => getOrderByNumberApi(orderNumber)
 );
 
-export const createOrder = createAsyncThunk(
-  'order/create',
-  async (orderData: string[]) => orderBurgerApi(orderData)
-);
+export const createOrder = createAsyncThunk<
+  TNewOrderResponse,
+  string[],
+  { state: RootState; rejectValue: string }
+>('order/create', async (orderData: string[], thunkAPI) => {
+  const state = thunkAPI.getState();
+  if (!state.auth.user) {
+    return thunkAPI.rejectWithValue('Требуется авторизация');
+  }
+  return orderBurgerApi(orderData);
+});
 
 const orderSlice = createSlice({
   name: 'order',
@@ -64,7 +71,8 @@ const orderSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка создания заказа';
+        state.error =
+          action.payload || action.error.message || 'Ошибка создания заказа';
       })
 
       .addCase(getOrderByNumber.pending, (state) => {

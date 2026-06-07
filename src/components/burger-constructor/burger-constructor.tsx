@@ -26,19 +26,20 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
 
   const onOrderClick = async () => {
-    const hasIngredients =
-      constructorItems.bun && constructorItems.ingredients.length > 0;
-
-    if (!user && hasIngredients) {
+    if (!user) {
       navigate('/login');
       return;
     }
 
     if (!constructorItems.bun || orderRequest) return;
 
-    const orderData = [constructorItems.bun._id].concat(
-      constructorItems.ingredients.map((ing: TConstructorIngredient) => ing._id)
-    );
+    const orderData = [
+      constructorItems.bun._id,
+      constructorItems.bun._id,
+      ...constructorItems.ingredients.map(
+        (ing: TConstructorIngredient) => ing._id
+      )
+    ];
 
     try {
       const response = await dispatch(createOrder(orderData)).unwrap();
