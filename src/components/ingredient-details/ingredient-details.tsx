@@ -1,12 +1,25 @@
 import { FC } from 'react';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
+import { useLocation, useParams } from 'react-router-dom';
+import { useSelector } from '../../services/store';
+import {
+  ingredientsSelector,
+  isLoadingSelector
+} from '../../services/slices/ingredientsSlice';
 
 export const IngredientDetails: FC = () => {
-  /** TODO: взять переменную из стора */
-  const ingredientData = null;
+  const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const isModal = !!location.state?.background;
 
-  if (!ingredientData) {
+  const ingredients = useSelector(ingredientsSelector);
+  const isIngredientsLoading = useSelector(isLoadingSelector);
+  const ingredientData = ingredients.find(
+    (ing: { _id: string | undefined }) => ing._id === id
+  );
+
+  if (isIngredientsLoading || !ingredientData) {
     return <Preloader />;
   }
 
